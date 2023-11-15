@@ -1,7 +1,9 @@
+import { CalendarTemplate } from '@/modules/calendar';
+
 const Home = () => {
   return (
     <section>
-      <h1>Next.js - Boilerplate</h1>
+      <CalendarTemplate />
     </section>
   );
 };
