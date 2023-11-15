@@ -10,22 +10,40 @@ export const CalendarBoard = () => {
     useCurrentMonth();
 
   return (
-    <div className="flex flex-col gap-2">
-      <div>
-        <button
-          type="button"
-          className="rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700"
-          onClick={handlePrevMonth}
-        >
-          Prev
+    <div className="flex flex-col gap-2 px-1">
+      <div className="flex gap-2 py-6">
+        <button type="button" onClick={handlePrevMonth}>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            className="h-6 w-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M15.75 19.5L8.25 12l7.5-7.5"
+            />
+          </svg>
         </button>
         <div className="text-2xl font-bold">{formattedMonth}</div>
-        <button
-          type="button"
-          className="rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700"
-          onClick={handleNextMonth}
-        >
-          Next
+        <button type="button" onClick={handleNextMonth}>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            className="h-6 w-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M8.25 4.5l7.5 7.5-7.5 7.5"
+            />
+          </svg>
         </button>
       </div>
 
