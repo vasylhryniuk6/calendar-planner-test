@@ -42,6 +42,8 @@ export const useCurrentMonth = () => {
 
   return {
     daysInMonth,
+    currentDate,
+    setCurrentDate,
     formattedMonth,
     handlePrevMonth,
     handleNextMonth,
