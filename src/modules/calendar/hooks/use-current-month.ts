@@ -1,3 +1,5 @@
+'use client';
+
 import {
   addMonths,
   eachDayOfInterval,
@@ -6,10 +8,12 @@ import {
   startOfMonth,
   subMonths,
 } from 'date-fns';
-import { useState } from 'react';
+
+import { useDate } from '../store';
 
 export const useCurrentMonth = () => {
-  const [currentDate, setCurrentDate] = useState(new Date());
+  const { setCurrentDateStorage, currentDateStorage } = useDate();
+  const currentDate = new Date(currentDateStorage);
 
   // Set the date to the first day of the current month
   const firstDayOfMonth = startOfMonth(currentDate);
@@ -27,23 +31,20 @@ export const useCurrentMonth = () => {
   const formattedMonth = format(currentDate, 'MMMM');
 
   const handlePrevMonth = () => {
-    setCurrentDate((prevDate) => {
-      const prevMonth = subMonths(prevDate, 1);
-      return prevMonth;
-    });
+    const prevMonth = subMonths(currentDate, 1);
+
+    setCurrentDateStorage(prevMonth);
   };
 
   const handleNextMonth = () => {
-    setCurrentDate((prevDate) => {
-      const nextMonth = addMonths(prevDate, 1);
-      return nextMonth;
-    });
+    const nextMonth = addMonths(currentDate, 1);
+
+    setCurrentDateStorage(nextMonth);
   };
 
   return {
     daysInMonth,
     currentDate,
-    setCurrentDate,
     formattedMonth,
     handlePrevMonth,
     handleNextMonth,
