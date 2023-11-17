@@ -13,8 +13,8 @@ export const Modal: React.FC<PropsWithChildren> = ({ children }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-40 flex min-h-screen w-full items-center justify-center bg-black bg-opacity-50">
-      <div className="w-[30%] bg-white p-3">
+    <div className="fixed inset-0 z-40 flex min-h-screen w-full items-center justify-center bg-black bg-opacity-50 ">
+      <div className="w-[30%] bg-white p-3 max-lg:w-[60%]">
         <div className="flex justify-end">
           <button type="button" onClick={handleClose}>
             <svg

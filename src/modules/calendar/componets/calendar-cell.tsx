@@ -49,7 +49,7 @@ export const CalendarCell: React.FC<CalendarCellProps> = ({
               <button
                 key={item.id}
                 type="button"
-                className="z-50 mt-2 whitespace-nowrap rounded-2xl bg-blue-600 font-semibold text-white"
+                className=" mt-2 whitespace-nowrap rounded-2xl bg-blue-600 font-semibold text-white"
                 onClick={() => handleOpen(item.id)}
               >
                 {item.title}
