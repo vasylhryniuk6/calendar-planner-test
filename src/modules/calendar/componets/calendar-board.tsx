@@ -3,13 +3,18 @@
 import 'react-datepicker/dist/react-datepicker.css';
 
 import { format, isToday } from 'date-fns';
+import { Fragment } from 'react';
 import DatePicker from 'react-datepicker';
+import { v4 as uuidv4 } from 'uuid';
 
+import { Modal } from '@/components/ui';
 import { useIsClient } from '@/hooks';
+import { useModal } from '@/store';
 
 import { useCurrentMonth } from '../hooks';
 import { useDate } from '../store';
 import { CalendarCell } from './calendar-cell';
+import { EventForm } from './event-form';
 
 export const CalendarBoard = () => {
   const { isClient } = useIsClient();
@@ -22,12 +27,18 @@ export const CalendarBoard = () => {
   } = useCurrentMonth();
 
   const { setCurrentDateStorage, currentDateStorage } = useDate();
+  const { isOpen, open } = useModal();
 
   return (
     <div className="flex flex-col gap-2 px-1">
       {isClient && (
         <>
           <div className="flex justify-end  py-6">
+            <div>
+              <button type="button" onClick={open}>
+                Add Event
+              </button>
+            </div>
             <div className="flex gap-2">
               <button type="button" onClick={handlePrevMonth}>
                 <svg
@@ -100,15 +111,23 @@ export const CalendarBoard = () => {
             {daysInMonth.map((day) => {
               return (
                 <CalendarCell
-                  key={day.getTime()}
+                  key={uuidv4()}
                   date={format(day, 'd')}
                   day={format(day, 'E')}
+                  currentDate={format(day, 'yyyy-MM-dd')}
+                  id={uuidv4()}
                   className={isToday(day) ? 'bg-green-200' : ''}
                 />
               );
             })}
           </div>
         </>
+      )}
+
+      {isOpen && (
+        <Modal>
+          <EventForm />
+        </Modal>
       )}
     </div>
   );
