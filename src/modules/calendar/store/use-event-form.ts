@@ -7,9 +7,20 @@ import type { IEventFormModel } from '../types/event-form.model';
 interface EventFormState {
   events: IEventFormModel[];
   eventsIds: string;
-  addEvent: (title: string, createdAt: Date) => void;
+  addEvent: (
+    title: string,
+    createdAt: Date,
+    beginTime: string,
+    description: string,
+  ) => void;
   addEventId: (id: string) => void;
-  editEvent: (id: string, title: string, createdAt: Date) => void;
+  editEvent: (
+    id: string,
+    title: string,
+    createdAt: Date,
+    beginTime: string,
+    description: string,
+  ) => void;
 }
 
 export const useEventForm = create<EventFormState>()(
@@ -22,7 +33,7 @@ export const useEventForm = create<EventFormState>()(
           eventsIds: id,
         }));
       },
-      addEvent: (title, createdAt) => {
+      addEvent: (title, createdAt, beginTime, description) => {
         set((state) => ({
           events: [
             ...state.events,
@@ -30,14 +41,18 @@ export const useEventForm = create<EventFormState>()(
               id: uuidv4(),
               title,
               createdAt,
+              beginTime,
+              description,
             },
           ],
         }));
       },
-      editEvent: (id, title, createdAt) => {
+      editEvent: (id, title, createdAt, beginTime, description) => {
         set((state) => ({
           events: state.events.map((event) =>
-            event.id === id ? { ...event, title, createdAt } : event,
+            event.id === id
+              ? { ...event, title, createdAt, beginTime, description }
+              : event,
           ),
         }));
       },

@@ -2,13 +2,12 @@
 
 import 'react-datepicker/dist/react-datepicker.css';
 
-import { add } from 'date-fns';
 import DatePicker from 'react-datepicker';
 import type { FieldValues, UseControllerProps } from 'react-hook-form';
 import { useController } from 'react-hook-form';
 
 export type InputDatepickerProps = {
-  labelText: string;
+  label: string;
 };
 
 export const InputDatepicker = <T extends FieldValues = FieldValues>(
@@ -16,14 +15,13 @@ export const InputDatepicker = <T extends FieldValues = FieldValues>(
 ) => {
   const { field } = useController(props);
 
-  const { labelText } = props;
-
-  const maxDay = add(new Date(), { days: 15 });
+  const { label } = props;
 
   return (
     <div className=" mb-2 flex flex-col">
       <div className="mb-2">
-        <span className="text-red-800">*</span> {labelText}
+        <span>{label}</span>
+        <span className="text-gray-400">*</span>
       </div>
       <DatePicker
         showIcon
@@ -32,7 +30,6 @@ export const InputDatepicker = <T extends FieldValues = FieldValues>(
         {...props}
         autoComplete="off"
         minDate={new Date()}
-        maxDate={maxDay}
         onChange={field.onChange}
         className="w-full border border-gray-300"
         placeholderText="Select date"
