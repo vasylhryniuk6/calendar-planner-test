@@ -16,7 +16,8 @@ interface EventFormProps {
 }
 
 export const EventForm = () => {
-  const { addEvent, events, eventsIds, editEvent, addEventId } = useEventForm();
+  const { addEvent, events, eventsIds, editEvent, addEventId, deleteEvent } =
+    useEventForm();
   const { close } = useModal();
 
   const matchEventsId = events.find((event) => event.id === eventsIds);
@@ -46,8 +47,18 @@ export const EventForm = () => {
       close();
     }
   };
+
+  const handleDelete = () => {
+    deleteEvent(eventsIds);
+    addEventId('');
+    close();
+  };
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
+      <h2 className="mb-3 text-xl">
+        {eventsIds ? 'Edit idea item' : 'Add new idea item'}
+      </h2>
       <div className="flex flex-col gap-4">
         <Input
           control={control}
@@ -81,12 +92,22 @@ export const EventForm = () => {
         />
       </div>
 
-      <div className="flex justify-end">
+      <div className="flex justify-end gap-3">
+        {eventsIds && (
+          <button
+            type="submit"
+            className="mt-2 rounded-xl bg-red-700 p-4 text-white"
+            onClick={handleDelete}
+          >
+            Delete
+          </button>
+        )}
+
         <button
           type="submit"
           className="mt-2 rounded-xl bg-black p-4 text-white"
         >
-          Save
+          {eventsIds ? 'Edit' : 'Save'}
         </button>
       </div>
     </form>
