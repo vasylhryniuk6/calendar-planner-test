@@ -49,7 +49,7 @@ export const useEventForm = create<EventFormState>()(
           ],
         }));
       },
-      editEvent: (id, title, createdAt, beginTime, description, udaptedAt) => {
+      editEvent: (id, title, createdAt, beginTime, description, updatedAt) => {
         set((state) => ({
           events: state.events.map((event) =>
             event.id === id
@@ -59,7 +59,7 @@ export const useEventForm = create<EventFormState>()(
                   createdAt,
                   beginTime,
                   description,
-                  udaptedAt,
+                  updatedAt,
                 }
               : event,
           ),
