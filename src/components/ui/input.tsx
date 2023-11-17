@@ -4,6 +4,8 @@ import React, { useId } from 'react';
 import type { FieldValues, UseControllerProps } from 'react-hook-form';
 import { useController } from 'react-hook-form';
 
+// TODO: React does not recognize the `isRequired` prop on a DOM element. If you intentionally want it to appear in the DOM as a custom attribute, spell it as lowercase `isrequired` instead. If you accidentally passed it from a parent component, remove it from the DOM element.
+
 type InputProps = React.ComponentProps<'input'> & {
   disabled?: boolean;
   label?: string;
