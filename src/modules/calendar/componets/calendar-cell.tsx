@@ -35,7 +35,10 @@ export const CalendarCell: React.FC<CalendarCellProps> = ({
 
   return (
     <article
-      className={cn('h-[200px] w-1/6 border border-gray-200', className)}
+      className={cn(
+        'h-[200px] w-1/6 border border-gray-200 overflow-hidden overflow-y-auto',
+        className,
+      )}
     >
       <div className="flex h-full flex-col p-3">
         <div className="flex items-center justify-between">
