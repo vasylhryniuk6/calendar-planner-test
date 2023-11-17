@@ -35,10 +35,10 @@ export const CalendarCell: React.FC<CalendarCellProps> = ({
 
   return (
     <article
-      className={cn('h-[200px] w-1/6 border border-gray-200 z-10', className)}
+      className={cn('h-[200px] w-1/6 border border-gray-200', className)}
     >
-      <div className="flex h-full justify-between p-3">
-        <div>
+      <div className="flex h-full flex-col p-3">
+        <div className="flex items-center justify-between">
           <h3>{date}</h3>
           <h4>{day}</h4>
         </div>
@@ -49,7 +49,7 @@ export const CalendarCell: React.FC<CalendarCellProps> = ({
               <button
                 key={item.id}
                 type="button"
-                className="z-50"
+                className="z-50 mt-2 whitespace-nowrap rounded-2xl bg-blue-600 font-semibold text-white"
                 onClick={() => handleOpen(item.id)}
               >
                 {item.title}

@@ -41,7 +41,7 @@ export const CalendarBoard = () => {
                 viewBox="0 0 24 24"
                 strokeWidth="1.5"
                 stroke="currentColor"
-                className="h-12 w-12 rounded-full bg-blue-400 p-1 text-white"
+                className="h-12 w-12 rounded-full bg-blue-600 p-1 text-white"
               >
                 <path
                   stroke-linecap="round"

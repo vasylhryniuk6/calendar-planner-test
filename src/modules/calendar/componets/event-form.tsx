@@ -4,6 +4,7 @@ import type { SubmitHandler } from 'react-hook-form';
 import { useForm } from 'react-hook-form';
 
 import { Input, InputDatepicker } from '@/components/ui';
+import { useModal } from '@/store';
 
 import { useEventForm } from '../store';
 
@@ -16,6 +17,7 @@ interface EventFormProps {
 
 export const EventForm = () => {
   const { addEvent, events, eventsIds, editEvent, addEventId } = useEventForm();
+  const { close } = useModal();
 
   const matchEventsId = events.find((event) => event.id === eventsIds);
   const { handleSubmit, control, reset } = useForm<EventFormProps>({
@@ -37,9 +39,11 @@ export const EventForm = () => {
         data.description,
       );
       addEventId('');
+      close();
     } else {
       addEvent(data.title, data.createdAt, data.beginTime, data.description);
       reset();
+      close();
     }
   };
   return (
