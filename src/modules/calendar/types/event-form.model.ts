@@ -4,4 +4,5 @@ export interface IEventFormModel {
   createdAt: Date;
   beginTime: string;
   description?: string;
+  udaptedAt?: Date;
 }

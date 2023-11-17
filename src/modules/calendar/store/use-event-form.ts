@@ -20,6 +20,7 @@ interface EventFormState {
     createdAt: Date,
     beginTime: string,
     description: string,
+    udaptedAt: Date | null,
   ) => void;
   deleteEvent: (id: string) => void;
 }
@@ -48,11 +49,18 @@ export const useEventForm = create<EventFormState>()(
           ],
         }));
       },
-      editEvent: (id, title, createdAt, beginTime, description) => {
+      editEvent: (id, title, createdAt, beginTime, description, udaptedAt) => {
         set((state) => ({
           events: state.events.map((event) =>
             event.id === id
-              ? { ...event, title, createdAt, beginTime, description }
+              ? {
+                  ...event,
+                  title,
+                  createdAt,
+                  beginTime,
+                  description,
+                  udaptedAt,
+                }
               : event,
           ),
         }));

@@ -1,5 +1,6 @@
 'use client';
 
+import { format } from 'date-fns';
 import type { SubmitHandler } from 'react-hook-form';
 import { useForm } from 'react-hook-form';
 
@@ -38,6 +39,7 @@ export const EventForm = () => {
         data.createdAt,
         data.beginTime,
         data.description,
+        new Date(),
       );
       addEventId('');
       close();
@@ -54,11 +56,29 @@ export const EventForm = () => {
     close();
   };
 
+  const transormToObjDate = matchEventsId
+    ? new Date(matchEventsId.udaptedAt ?? matchEventsId.createdAt)
+    : new Date();
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <h2 className="mb-3 text-xl">
+      <h2 className="mb-1 text-xl">
         {eventsIds ? 'Edit idea item' : 'Add new idea item'}
       </h2>
+      {matchEventsId && (
+        <div className="mb-2 text-xs">
+          {matchEventsId.udaptedAt ? (
+            <span>Updated at</span>
+          ) : (
+            <span>Createt at</span>
+          )}
+          <span className="ml-2">
+            {format(transormToObjDate, 'yyyy-MM-dd')}{' '}
+            {transormToObjDate.getHours()}:{transormToObjDate.getMinutes()}:
+            {transormToObjDate.getSeconds()}
+          </span>
+        </div>
+      )}
       <div className="flex flex-col gap-4">
         <Input
           control={control}
