@@ -13,7 +13,7 @@ export type InputDatepickerProps = {
 export const InputDatepicker = <T extends FieldValues = FieldValues>(
   props: UseControllerProps<T> & InputDatepickerProps,
 ) => {
-  const { field } = useController(props);
+  const { field, formState } = useController(props);
 
   const { label } = props;
 
@@ -34,6 +34,11 @@ export const InputDatepicker = <T extends FieldValues = FieldValues>(
         className="w-full border border-gray-300"
         placeholderText="Select date"
       />
+      {formState.errors && (
+        <span className="text-xs text-red-700">
+          {formState.errors?.[field.name]?.message as string}
+        </span>
+      )}
     </div>
   );
 };

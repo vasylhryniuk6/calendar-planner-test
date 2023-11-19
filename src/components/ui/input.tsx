@@ -7,23 +7,22 @@ import { useController } from 'react-hook-form';
 type InputProps = React.ComponentProps<'input'> & {
   disabled?: boolean;
   label?: string;
-  isRequired?: boolean;
+  requiredmark?: string;
 };
 
-export const Input = <T extends FieldValues = FieldValues>(
+export const Input = <T extends FieldValues>(
   props: UseControllerProps<T> & InputProps,
 ) => {
-  const { field } = useController(props);
+  const { field, formState } = useController(props);
   const id = useId();
 
-  const { label, disabled, isRequired } = props;
-
+  const { label, disabled, requiredmark } = props;
   return (
     <fieldset className="flex flex-col">
       {label && (
         <label htmlFor={id}>
           <span>{label}</span>
-          {isRequired && <span className="text-gray-400">*</span>}
+          {requiredmark && <span className="text-gray-400">*</span>}{' '}
         </label>
       )}
       <input
@@ -33,6 +32,11 @@ export const Input = <T extends FieldValues = FieldValues>(
         {...props}
         disabled={disabled}
       />
+      {formState.errors && (
+        <span className="text-xs text-red-700">
+          {formState.errors?.[field.name]?.message as string}
+        </span>
+      )}
     </fieldset>
   );
 };

@@ -1,5 +1,6 @@
 'use client';
 
+import { zodResolver } from '@hookform/resolvers/zod';
 import { format } from 'date-fns';
 import type { SubmitHandler } from 'react-hook-form';
 import { useForm } from 'react-hook-form';
@@ -7,14 +8,9 @@ import { useForm } from 'react-hook-form';
 import { Input, InputDatepicker } from '@/components/ui';
 import { useModal } from '@/store';
 
+import type { EventFormSchemaType } from '../schemas/event-form.schema';
+import { eventFormSchema } from '../schemas/event-form.schema';
 import { useEventForm } from '../store';
-
-interface EventFormProps {
-  title: string;
-  createdAt: Date;
-  beginTime: string;
-  description: string;
-}
 
 export const EventForm = () => {
   const { addEvent, events, eventsIds, editEvent, addEventId, deleteEvent } =
@@ -22,16 +18,18 @@ export const EventForm = () => {
   const { close } = useModal();
 
   const matchEventsId = events.find((event) => event.id === eventsIds);
-  const { handleSubmit, control, reset } = useForm<EventFormProps>({
+  const { handleSubmit, control, reset } = useForm<EventFormSchemaType>({
+    resolver: zodResolver(eventFormSchema),
     defaultValues: {
       title: matchEventsId?.title ?? '',
       createdAt: matchEventsId?.createdAt ?? new Date(),
       beginTime: matchEventsId?.beginTime ?? '',
       description: matchEventsId?.description ?? '',
     },
+    mode: 'onBlur',
   });
 
-  const onSubmit: SubmitHandler<EventFormProps> = async (data) => {
+  const onSubmit: SubmitHandler<EventFormSchemaType> = async (data) => {
     if (matchEventsId) {
       editEvent(
         matchEventsId.id,
@@ -83,9 +81,9 @@ export const EventForm = () => {
         <Input
           control={control}
           name="title"
-          isRequired
           type="text"
           label="Title"
+          requiredmark="*"
           placeholder="Add item"
         />
         <Input

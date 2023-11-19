@@ -4,8 +4,6 @@ interface ModalState {
   isOpen: boolean;
   open: () => void;
   close: () => void;
-  editData: any;
-  setEditData: (data: any) => void;
 }
 
 export const useModal = create<ModalState>((set) => ({
@@ -13,5 +11,4 @@ export const useModal = create<ModalState>((set) => ({
   editData: [],
   open: () => set({ isOpen: true }),
   close: () => set({ isOpen: false }),
-  setEditData: (data: any) => set({ editData: data }),
 }));
