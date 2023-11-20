@@ -3,7 +3,6 @@
 import 'react-datepicker/dist/react-datepicker.css';
 
 import { format, isToday } from 'date-fns';
-import { Fragment } from 'react';
 import DatePicker from 'react-datepicker';
 import { v4 as uuidv4 } from 'uuid';
 
