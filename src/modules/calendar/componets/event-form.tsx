@@ -1,3 +1,5 @@
+/* eslint-disable unused-imports/no-unused-vars */
+
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -11,6 +13,7 @@ import { useModal } from '@/store';
 import { UseEventFormActions } from '../hooks';
 import type { EventFormSchemaType } from '../schemas/event-form.schema';
 import { eventFormSchema } from '../schemas/event-form.schema';
+import { useEventFormService } from '../services';
 import { useEventForm } from '../store';
 
 // Todo: check if empty field is date and correct validation
@@ -26,6 +29,9 @@ export const EventForm = () => {
     onNativeChange,
   } = UseEventFormActions();
 
+  const { eventFormCreateMutation, eventFormEditMutation } =
+    useEventFormService();
+
   const { handleSubmit, control, reset } = useForm<EventFormSchemaType>({
     resolver: zodResolver(eventFormSchema),
     defaultValues: {
@@ -39,6 +45,15 @@ export const EventForm = () => {
 
   const onSubmit: SubmitHandler<EventFormSchemaType> = async (data) => {
     if (matchEventsId) {
+      // Example for REST patch request attentcion: interface not modified
+      // await eventFormEditMutation.mutateAsync(
+      //   matchEventsId.id,
+      //   data.title,
+      //   native,
+      //   data.beginTime,
+      //   data.description,
+      //   new Date(),
+      // );
       editEvent(
         matchEventsId.id,
         data.title,
@@ -50,6 +65,13 @@ export const EventForm = () => {
       addEventId('');
       close();
     } else {
+      // Example for REST post request
+      // await eventFormCreateMutation.mutateAsync({
+      //   title: data.title,
+      //   createdAt: native,
+      //   beginTime: data.beginTime,
+      //   description: data.description,
+      // });
       addEvent(data.title, native, data.beginTime, data.description);
       reset();
       close();

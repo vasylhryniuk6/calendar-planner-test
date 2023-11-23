@@ -2,10 +2,13 @@ import { useState } from 'react';
 
 import { useModal } from '@/store';
 
+import { useEventFormService } from '../services';
 import { useEventForm } from '../store';
 
 export const UseEventFormActions = () => {
   const { events, eventsIds, addEventId, deleteEvent } = useEventForm();
+  // eslint-disable-next-line unused-imports/no-unused-vars
+  const { eventFormDeleteMutation } = useEventFormService();
   const { close } = useModal();
 
   const matchEventsId = events.find((event) => event.id === eventsIds);
@@ -18,7 +21,9 @@ export const UseEventFormActions = () => {
     setNative(new Date(e.target.value));
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
+    // Example for REST delete request
+    // await eventFormDeleteMutation.mutateAsync(eventsIds);
     deleteEvent(eventsIds);
     addEventId('');
     close();
