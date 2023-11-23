@@ -8,7 +8,7 @@ export const eventFormSchema = z.object({
     .min(3, { message: 'Title must be at least 3 characters long' }),
   description: z.string(),
   beginTime: z.string(),
-  createdAt: z
+  createdAt: z.coerce
     .date({
       required_error: 'Field is required',
     })

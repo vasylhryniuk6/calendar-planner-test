@@ -2,15 +2,19 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { format } from 'date-fns';
+import { useState } from 'react';
 import type { SubmitHandler } from 'react-hook-form';
 import { useForm } from 'react-hook-form';
 
-import { Input, InputDatepicker } from '@/components/ui';
+import { Input } from '@/components/ui';
 import { useModal } from '@/store';
 
 import type { EventFormSchemaType } from '../schemas/event-form.schema';
 import { eventFormSchema } from '../schemas/event-form.schema';
 import { useEventForm } from '../store';
+
+// Todo: check if empty field is date and correct validation
+// Todo: refactor component
 
 export const EventForm = () => {
   const { addEvent, events, eventsIds, editEvent, addEventId, deleteEvent } =
@@ -18,23 +22,32 @@ export const EventForm = () => {
   const { close } = useModal();
 
   const matchEventsId = events.find((event) => event.id === eventsIds);
+
+  const [native, setNative] = useState<Date>(
+    matchEventsId ? new Date(matchEventsId?.createdAt) : new Date(),
+  );
+
   const { handleSubmit, control, reset } = useForm<EventFormSchemaType>({
     resolver: zodResolver(eventFormSchema),
     defaultValues: {
       title: matchEventsId?.title ?? '',
-      createdAt: matchEventsId?.createdAt ?? new Date(),
+      createdAt: matchEventsId?.createdAt ?? native,
       beginTime: matchEventsId?.beginTime ?? '',
       description: matchEventsId?.description ?? '',
     },
     mode: 'onBlur',
   });
 
+  const onNativeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNative(new Date(e.target.value));
+  };
+
   const onSubmit: SubmitHandler<EventFormSchemaType> = async (data) => {
     if (matchEventsId) {
       editEvent(
         matchEventsId.id,
         data.title,
-        data.createdAt,
+        native,
         data.beginTime,
         data.description,
         new Date(),
@@ -42,7 +55,7 @@ export const EventForm = () => {
       addEventId('');
       close();
     } else {
-      addEvent(data.title, data.createdAt, data.beginTime, data.description);
+      addEvent(data.title, native, data.beginTime, data.description);
       reset();
       close();
     }
@@ -95,8 +108,12 @@ export const EventForm = () => {
         />
       </div>
       <div className="mt-4 flex items-center justify-between gap-2">
-        <InputDatepicker
+        <Input
           control={control}
+          type="date"
+          value={format(native, 'yyyy-MM-dd')}
+          min={format(new Date(), 'yyyy-MM-dd')}
+          onChange={onNativeChange}
           name="createdAt"
           label="Choose date"
           rules={{ required: true }}
