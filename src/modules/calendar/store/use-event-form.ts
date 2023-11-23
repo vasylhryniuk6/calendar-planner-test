@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-import type { IEventFormModel } from '../types/event-form.model';
+import type { IEventFormModel } from '../types';
 
 interface EventFormState {
   events: IEventFormModel[];
