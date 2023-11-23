@@ -2,30 +2,29 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { format } from 'date-fns';
-import { useState } from 'react';
 import type { SubmitHandler } from 'react-hook-form';
 import { useForm } from 'react-hook-form';
 
 import { Input } from '@/components/ui';
 import { useModal } from '@/store';
 
+import { UseEventFormActions } from '../hooks';
 import type { EventFormSchemaType } from '../schemas/event-form.schema';
 import { eventFormSchema } from '../schemas/event-form.schema';
 import { useEventForm } from '../store';
 
 // Todo: check if empty field is date and correct validation
-// Todo: refactor component
 
 export const EventForm = () => {
-  const { addEvent, events, eventsIds, editEvent, addEventId, deleteEvent } =
-    useEventForm();
+  const { addEvent, eventsIds, editEvent, addEventId } = useEventForm();
   const { close } = useModal();
-
-  const matchEventsId = events.find((event) => event.id === eventsIds);
-
-  const [native, setNative] = useState<Date>(
-    matchEventsId ? new Date(matchEventsId?.createdAt) : new Date(),
-  );
+  const {
+    native,
+    handleDelete,
+    transormToObjDate,
+    matchEventsId,
+    onNativeChange,
+  } = UseEventFormActions();
 
   const { handleSubmit, control, reset } = useForm<EventFormSchemaType>({
     resolver: zodResolver(eventFormSchema),
@@ -37,10 +36,6 @@ export const EventForm = () => {
     },
     mode: 'onBlur',
   });
-
-  const onNativeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNative(new Date(e.target.value));
-  };
 
   const onSubmit: SubmitHandler<EventFormSchemaType> = async (data) => {
     if (matchEventsId) {
@@ -60,16 +55,6 @@ export const EventForm = () => {
       close();
     }
   };
-
-  const handleDelete = () => {
-    deleteEvent(eventsIds);
-    addEventId('');
-    close();
-  };
-
-  const transormToObjDate = matchEventsId
-    ? new Date(matchEventsId.udaptedAt ?? matchEventsId.createdAt)
-    : new Date();
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -113,7 +98,7 @@ export const EventForm = () => {
           type="date"
           value={format(native, 'yyyy-MM-dd')}
           min={format(new Date(), 'yyyy-MM-dd')}
-          onChange={onNativeChange}
+          onChange={(e) => onNativeChange(e)}
           name="createdAt"
           label="Choose date"
           rules={{ required: true }}
