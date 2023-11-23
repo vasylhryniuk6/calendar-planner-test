@@ -3,10 +3,13 @@
 import 'react-datepicker/dist/react-datepicker.css';
 
 import { format, isToday } from 'date-fns';
+import { enUS } from 'date-fns/locale';
 import { Fragment } from 'react';
-import DatePicker from 'react-datepicker';
 import { v4 as uuidv4 } from 'uuid';
 
+import AddIco from '@/assets/images/icons/add-ico.svg';
+import NextArrowIco from '@/assets/images/icons/next-arrow-ico.svg';
+import PrevArrowIco from '@/assets/images/icons/prev-arrow-ico.svg';
 import { Modal } from '@/components/ui';
 import { useIsClient } from '@/hooks';
 import { useModal } from '@/store';
@@ -29,43 +32,19 @@ export const CalendarBoard = () => {
   const { setCurrentDateStorage, currentDateStorage } = useDate();
   const { isOpen, open } = useModal();
 
+  const currentDateStorageFormatted = new Date(currentDateStorage);
+
   return (
     <div className="flex flex-col gap-2 px-1">
       {isClient && (
         <>
           <div className="flex items-center justify-between  py-6">
             <button type="button" onClick={open}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-                stroke="currentColor"
-                className="h-12 w-12 rounded-full bg-blue-600 p-1 text-white"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
+              <AddIco className="h-12 w-12 rounded-full bg-blue-600 p-1 text-white" />
             </button>
             <div className="flex items-center gap-2">
               <button type="button" onClick={handlePrevMonth}>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth="1.5"
-                  stroke="currentColor"
-                  className="h-6 w-6"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M15.75 19.5L8.25 12l7.5-7.5"
-                  />
-                </svg>
+                <PrevArrowIco className="h-6 w-6" />
               </button>
 
               <div className="text-2xl font-bold">
@@ -74,46 +53,21 @@ export const CalendarBoard = () => {
               </div>
 
               <button type="button" onClick={handleNextMonth}>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth="1.5"
-                  stroke="currentColor"
-                  className="h-6 w-6"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M8.25 4.5l7.5 7.5-7.5 7.5"
-                  />
-                </svg>
+                <NextArrowIco className="h-6 w-6" />
               </button>
 
-              <DatePicker
-                showIcon
-                selected={new Date(currentDateStorage)}
-                onChange={(date: Date | null) =>
-                  setCurrentDateStorage(date || new Date())
+              <input
+                type="month"
+                value={format(currentDateStorageFormatted, 'yyyy-MM', {
+                  locale: enUS,
+                })}
+                min={format(new Date(), 'yyyy-MM', { locale: enUS })}
+                onChange={(e: React.ChangeEvent<HTMLInputElement> | null) =>
+                  setCurrentDateStorage(
+                    e && e.target.value ? new Date(e.target.value) : new Date(),
+                  )
                 }
-                dateFormat="MM/yyyy"
-                showMonthYearPicker
-                icon={
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth="1.5"
-                    stroke="currentColor"
-                    className="h-6 w-6"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"
-                    />
-                  </svg>
-                }
+                lang="en-US"
               />
             </div>
           </div>

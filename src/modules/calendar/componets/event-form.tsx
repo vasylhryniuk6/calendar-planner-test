@@ -1,3 +1,5 @@
+/* eslint-disable unused-imports/no-unused-vars */
+
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -5,24 +7,36 @@ import { format } from 'date-fns';
 import type { SubmitHandler } from 'react-hook-form';
 import { useForm } from 'react-hook-form';
 
-import { Input, InputDatepicker } from '@/components/ui';
+import { Input } from '@/components/ui';
 import { useModal } from '@/store';
 
+import { UseEventFormActions } from '../hooks';
 import type { EventFormSchemaType } from '../schemas/event-form.schema';
 import { eventFormSchema } from '../schemas/event-form.schema';
+import { useEventFormService } from '../services';
 import { useEventForm } from '../store';
 
-export const EventForm = () => {
-  const { addEvent, events, eventsIds, editEvent, addEventId, deleteEvent } =
-    useEventForm();
-  const { close } = useModal();
+// Todo: check if empty field is date and correct validation
 
-  const matchEventsId = events.find((event) => event.id === eventsIds);
+export const EventForm = () => {
+  const { addEvent, eventsIds, editEvent, addEventId } = useEventForm();
+  const { close } = useModal();
+  const {
+    native,
+    handleDelete,
+    transormToObjDate,
+    matchEventsId,
+    onNativeChange,
+  } = UseEventFormActions();
+
+  const { eventFormCreateMutation, eventFormEditMutation } =
+    useEventFormService();
+
   const { handleSubmit, control, reset } = useForm<EventFormSchemaType>({
     resolver: zodResolver(eventFormSchema),
     defaultValues: {
       title: matchEventsId?.title ?? '',
-      createdAt: matchEventsId?.createdAt ?? new Date(),
+      createdAt: matchEventsId?.createdAt ?? native,
       beginTime: matchEventsId?.beginTime ?? '',
       description: matchEventsId?.description ?? '',
     },
@@ -31,10 +45,19 @@ export const EventForm = () => {
 
   const onSubmit: SubmitHandler<EventFormSchemaType> = async (data) => {
     if (matchEventsId) {
+      // Example for REST patch request attentcion: interface not modified
+      // await eventFormEditMutation.mutateAsync(
+      //   matchEventsId.id,
+      //   data.title,
+      //   native,
+      //   data.beginTime,
+      //   data.description,
+      //   new Date(),
+      // );
       editEvent(
         matchEventsId.id,
         data.title,
-        data.createdAt,
+        native,
         data.beginTime,
         data.description,
         new Date(),
@@ -42,21 +65,18 @@ export const EventForm = () => {
       addEventId('');
       close();
     } else {
-      addEvent(data.title, data.createdAt, data.beginTime, data.description);
+      // Example for REST post request
+      // await eventFormCreateMutation.mutateAsync({
+      //   title: data.title,
+      //   createdAt: native,
+      //   beginTime: data.beginTime,
+      //   description: data.description,
+      // });
+      addEvent(data.title, native, data.beginTime, data.description);
       reset();
       close();
     }
   };
-
-  const handleDelete = () => {
-    deleteEvent(eventsIds);
-    addEventId('');
-    close();
-  };
-
-  const transormToObjDate = matchEventsId
-    ? new Date(matchEventsId.udaptedAt ?? matchEventsId.createdAt)
-    : new Date();
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -95,8 +115,12 @@ export const EventForm = () => {
         />
       </div>
       <div className="mt-4 flex items-center justify-between gap-2">
-        <InputDatepicker
+        <Input
           control={control}
+          type="date"
+          value={format(native, 'yyyy-MM-dd')}
+          min={format(new Date(), 'yyyy-MM-dd')}
+          onChange={(e) => onNativeChange(e)}
           name="createdAt"
           label="Choose date"
           rules={{ required: true }}
